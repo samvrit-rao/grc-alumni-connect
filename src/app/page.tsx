@@ -31,33 +31,66 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Beta banner — full width */}
+      {/* Beta banner */}
       <div className="bg-[#FFF9C4] border-b border-[#F9A825]/30">
         <div className="max-w-[600px] mx-auto px-4 py-2.5 text-center">
           <p className="text-xs text-[#5D4037]">
-            <strong>Beta Preview</strong> — This directory is currently in beta with Columbia Alumni. It will be populated with verified alumni from our full membership database.
+            <strong>Beta Preview</strong> - Currently running on general Columbia alumni. Infrastructure is ready to be pointed at GRC&apos;s actual alumni base.
           </p>
         </div>
       </div>
 
       <div className="max-w-[600px] mx-auto px-4 py-5 space-y-3">
-        {/* Profile card */}
-        <div className="bg-white rounded-lg border border-[#E0E0E0] overflow-hidden">
-          <div className="h-16 bg-gradient-to-r from-[#004182] to-[#0A66C2]" />
-          <div className="px-5 pb-4 -mt-8">
-            <div className="h-16 w-16 rounded-full border-[3px] border-white bg-[#0A66C2] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">GRC</span>
-            </div>
-            <h2 className="text-lg font-semibold text-[#191919] mt-2">GRC Alumni Connect</h2>
-            <p className="text-xs text-[#666]">Columbia Global Research & Consulting Group</p>
-            <div className="flex gap-6 mt-3 pt-3 border-t border-[#E0E0E0]">
-              <div className="text-xs">
-                <span className="text-[#666]">Connections </span>
-                <span className="text-[#0A66C2] font-semibold">{totalAlumni}</span>
+        {/* What is this tool */}
+        <div className="bg-white rounded-lg border border-[#E0E0E0] p-5">
+          <h2 className="text-lg font-semibold text-[#191919] mb-3">GRC Alumni Network Tool</h2>
+          <p className="text-sm text-[#666] leading-relaxed mb-4">
+            A LinkedIn-style alumni directory built for GRC. Currently a beta running on general Columbia alumni to demonstrate the platform.
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="h-8 w-8 rounded-full bg-[#0A66C2]/10 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="h-4 w-4 text-[#0A66C2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               </div>
-              <div className="text-xs">
-                <span className="text-[#666]">Firms </span>
-                <span className="text-[#0A66C2] font-semibold">{firmCounts.length}</span>
+              <div>
+                <div className="text-sm font-semibold text-[#191919]">Search by firm, role, and grad year</div>
+                <div className="text-xs text-[#666]">Finding an alum at Bain or McKinsey takes thirty seconds, not three days of digging through old Slack threads</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="h-8 w-8 rounded-full bg-[#0A66C2]/10 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="h-4 w-4 text-[#0A66C2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-[#191919]">AI-powered coffee chat outreach</div>
+                <div className="text-xs text-[#666]">Auto-generates personalized messages based on their background and your interests. Copy and send via LinkedIn in one click</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="h-8 w-8 rounded-full bg-[#0A66C2]/10 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="h-4 w-4 text-[#0A66C2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-[#191919]">{totalAlumni} alumni across {firmCounts.length} top consulting firms</div>
+                <div className="text-xs text-[#666]">McKinsey, BCG, Bain, Oliver Wyman and more. Profiles include title, office location, and direct LinkedIn links</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="h-8 w-8 rounded-full bg-[#0A66C2]/10 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="h-4 w-4 text-[#0A66C2]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-[#191919]">AI background summaries</div>
+                <div className="text-xs text-[#666]">Each profile includes an auto-generated summary of their experience and expertise so you know who to reach out to</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="h-8 w-8 rounded-full bg-[#057642]/10 flex items-center justify-center shrink-0 mt-0.5">
+                <svg className="h-4 w-4 text-[#057642]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-[#191919]">Ready for GRC</div>
+                <div className="text-xs text-[#666]">Infrastructure is built. Just needs to be pointed at GRC&apos;s actual alumni base to go live for the whole club</div>
               </div>
             </div>
           </div>

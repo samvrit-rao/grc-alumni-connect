@@ -129,7 +129,7 @@ export function MessageThread({ alumni }: { alumni: AlumniItem[] }) {
             {/* Message editor */}
             <div className="flex-1 p-4 overflow-y-auto">
               <div className="bg-[#F4F2EE] rounded-lg p-3 max-w-[85%]">
-                <p className="text-xs text-li-text-muted mb-1">Draft message — edit below</p>
+                <p className="text-xs text-li-text-muted mb-1">Draft message -edit below</p>
               </div>
               <textarea
                 value={messages[selected.id] || ""}

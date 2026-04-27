@@ -33,7 +33,7 @@ export function CoffeeChatSection({ alumniName, alumniTitle, firmName, office }:
     } else {
       msg += `As someone exploring consulting, I'd love to learn more about your experience. `;
     }
-    if (office) msg += `I noticed you're based in ${office} — `;
+    if (office) msg += `I noticed you're based in ${office} -`;
     msg += `would you have 15-20 minutes for a quick virtual coffee chat?\n\n`;
     msg += `I'd especially love to hear about:\n`;
     msg += `- Your path from Columbia to ${firmShort}\n`;

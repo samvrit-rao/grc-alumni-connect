@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "GRC Alumni Connect",
-  description: "Columbia Global Research & Consulting — Alumni Network",
+  description: "Columbia Global Research & Consulting - Alumni Network",
 };
 
 export default function RootLayout({

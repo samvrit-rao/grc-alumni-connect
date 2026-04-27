@@ -49,7 +49,7 @@ export default async function RecruitersPage() {
                   return hours.map((h, i) => (
                     <div key={`${r.id}-${i}`} className="flex items-start justify-between">
                       <div>
-                        <div className="font-semibold text-sm text-navy">{firm?.shortName || r.firm} — {r.name}</div>
+                        <div className="font-semibold text-sm text-navy">{firm?.shortName || r.firm} -{r.name}</div>
                         <div className="text-sm text-slate-600">{h.dayOfWeek} {h.startTime}&#8211;{h.endTime}</div>
                         <div className="text-xs text-slate-400">{h.location}</div>
                       </div>
