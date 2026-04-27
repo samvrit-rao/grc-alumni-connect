@@ -1,0 +1,22 @@
+{
+  "name": "grc-harvester",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "harvest": "tsx src/index.ts",
+    "harvest:dry": "tsx src/index.ts --dry-run",
+    "harvest:invite": "tsx src/invite-batch.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@prisma/client": "^5.22.0",
+    "commander": "^12.0.0",
+    "dotenv": "^16.0.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

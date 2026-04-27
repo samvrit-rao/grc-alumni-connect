@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────
+// NextAuth models
+// ──────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ──────────────────────────────────────────
+// App user (GRC member logged in via NextAuth)
+// ──────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("MEMBER") // MEMBER | ADMIN
+
+  accounts         Account[]
+  sessions         Session[]
+  outreachRequests OutreachRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ──────────────────────────────────────────
+// Alumni directory
+// ──────────────────────────────────────────
+
+model Alumni {
+  id              String  @id @default(cuid())
+  name            String
+  gradYear        Int?
+  school          String? // CC | SEAS | GS | Barnard | GSAS | SIPA | CBS | Other
+  currentFirm     String
+  currentTitle    String?
+  office          String? // e.g. "New York", "Chicago", "London"
+  practiceArea    String? // e.g. "Strategy", "Operations", "Digital"
+  linkedinUrl     String  @unique
+  workEmail       String?
+  personalEmail   String?
+  willingToChat   Boolean @default(false)
+  grcInvolvement  String? // e.g. "Project Lead F23", "Member S22–S23"
+
+  // Data provenance & verification
+  source              String  // LINKEDIN_SEED | SELF_ENROLLED | REFERRAL | ADMIN_ADDED
+  verifiedByAlumni    Boolean @default(false)
+  publishedToDirectory Boolean @default(false)
+
+  // Claim token (for seeded alumni to verify themselves)
+  claimToken          String?  @unique
+  claimTokenExpiresAt DateTime?
+  claimedAt           DateTime?
+
+  // Referral tracking
+  referredBy          String? // cuid of the User who referred them
+
+  lastEnrichedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  outreachRequests OutreachRequest[]
+
+  @@index([currentFirm])
+  @@index([gradYear])
+  @@index([office])
+  @@index([source])
+}
+
+// ──────────────────────────────────────────
+// Recruiters
+// ──────────────────────────────────────────
+
+model Recruiter {
+  id              String  @id @default(cuid())
+  name            String
+  firm            String
+  title           String?
+  email           String?
+  phone           String?
+  schedulingLink  String?
+  officeHours     String? // JSON string: [{dayOfWeek, startTime, endTime, location, notes}]
+  nextCampusVisit DateTime?
+  campusVisitEvent String? // e.g. "Fall Recruiting Info Session"
+  focusSchools    String? // comma-separated: "CC,SEAS,CBS"
+
+  source         String? // ADMIN_ADDED | IMPORTED
+  lastEnrichedAt DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([firm])
+}
+
+// ──────────────────────────────────────────
+// Outreach tracking
+// ──────────────────────────────────────────
+
+model OutreachRequest {
+  id          String   @id @default(cuid())
+  requesterId String
+  alumniId    String
+  message     String
+  status      String   @default("DRAFTED") // DRAFTED | SENT | RESPONDED
+
+  requester User    @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  alumni    Alumni  @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([requesterId])
+  @@index([alumniId])
+  @@index([status])
+}
+
+// ──────────────────────────────────────────
+// Referral links (for the growth loop)
+// ──────────────────────────────────────────
+
+model ReferralLink {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  createdBy String   // User id who generated this link
+  usedCount Int      @default(0)
+  createdAt DateTime @default(now())
+}
