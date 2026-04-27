@@ -2,15 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
@@ -20,7 +11,6 @@ const NAV_ITEMS = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
 
   return (
     <nav className="bg-navy text-white sticky top-0 z-50">
@@ -40,69 +30,26 @@ export function Navbar() {
                 </div>
               </div>
             </Link>
-            {session && (
-              <div className="hidden md:flex items-center gap-1">
-                {NAV_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                      pathname === item.href
-                        ? "bg-white/15 text-white"
-                        : "text-white/70 hover:text-white hover:bg-white/10"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                {session.user?.role === "ADMIN" && (
-                  <Link
-                    href="/admin"
-                    className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                      pathname.startsWith("/admin")
-                        ? "bg-white/15 text-white"
-                        : "text-white/70 hover:text-white hover:bg-white/10"
-                    }`}
-                  >
-                    Admin
-                  </Link>
-                )}
-              </div>
-            )}
+            <div className="hidden md:flex items-center gap-1">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+                    pathname === item.href
+                      ? "bg-white/15 text-white"
+                      : "text-white/70 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </div>
-          <div>
-            {session ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-white/10">
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-columbia-blue text-navy text-xs font-semibold">
-                        {session.user?.name
-                          ?.split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase() || "?"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem className="text-xs text-muted-foreground">
-                    {session.user?.email}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => signOut()}>
-                    Sign out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button
-                onClick={() => signIn()}
-                className="bg-columbia-blue text-navy hover:bg-columbia-light font-semibold text-sm"
-              >
-                Sign In
-              </Button>
-            )}
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] bg-columbia-blue/20 text-columbia-blue px-2 py-1 rounded-full font-medium uppercase tracking-wider">
+              Beta
+            </span>
           </div>
         </div>
       </div>
