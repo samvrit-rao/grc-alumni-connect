@@ -18,14 +18,14 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-full bg-columbia-blue flex items-center justify-center">
-                <span className="text-navy font-bold text-sm">GRC</span>
+              <div className="h-9 w-9 rounded-full bg-teal flex items-center justify-center">
+                <span className="text-white font-bold text-sm">GRC</span>
               </div>
               <div className="hidden sm:block">
-                <div className="font-display text-base font-semibold leading-tight">
+                <div className="font-display text-base font-bold leading-tight tracking-tight">
                   GRC Alumni Connect
                 </div>
-                <div className="text-[10px] text-columbia-blue tracking-wider uppercase">
+                <div className="text-[10px] text-teal tracking-wider uppercase">
                   Columbia University
                 </div>
               </div>
@@ -47,7 +47,7 @@ export function Navbar() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] bg-columbia-blue/20 text-columbia-blue px-2 py-1 rounded-full font-medium uppercase tracking-wider">
+            <span className="text-[10px] bg-teal/20 text-teal px-2 py-1 rounded-full font-semibold uppercase tracking-wider">
               Beta
             </span>
           </div>

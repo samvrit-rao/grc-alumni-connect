@@ -43,17 +43,33 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // GRC brand palette
         navy: {
-          DEFAULT: "#1B2A4A",
-          light: "#2A3F6B",
-          dark: "#0F1A2E",
+          DEFAULT: "#0A1F5B",
+          light: "#1a3278",
+          dark: "#061340",
+        },
+        teal: {
+          DEFAULT: "#3DB2C1",
+          light: "#5ec5d1",
+        },
+        burgundy: {
+          DEFAULT: "#982649",
+          light: "#b33360",
+        },
+        coral: {
+          DEFAULT: "#E07A5F",
+          light: "#e89680",
         },
         columbia: {
           blue: "#9BCBEB",
           light: "#C5E1F5",
           dark: "#1D4F91",
         },
-        gold: "#D4A843",
+        gray: {
+          DEFAULT: "#9E9E9E",
+          dark: "#595959",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -61,8 +77,8 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        display: ["Playfair Display", "Georgia", "serif"],
-        sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Raleway", "sans-serif"],
+        sans: ["proxima-nova", "Proxima Nova", "system-ui", "sans-serif"],
       },
     },
   },

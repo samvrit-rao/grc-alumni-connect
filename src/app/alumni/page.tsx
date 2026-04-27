@@ -33,16 +33,15 @@ export default async function AlumniPage({ searchParams }: Props) {
 
   if (q) {
     where.OR = [
-      { name: { contains: q } },
-      { currentTitle: { contains: q } },
-      { grcInvolvement: { contains: q } },
+      { name: { contains: q, mode: "insensitive" } },
+      { currentTitle: { contains: q, mode: "insensitive" } },
     ];
   }
 
   const [alumni, offices, practiceAreas] = await Promise.all([
     prisma.alumni.findMany({
       where,
-      orderBy: [{ willingToChat: "desc" }, { name: "asc" }],
+      orderBy: [{ name: "asc" }],
     }),
     prisma.alumni
       .findMany({
@@ -66,12 +65,11 @@ export default async function AlumniPage({ searchParams }: Props) {
 
   return (
     <div>
-      {/* Header */}
       <div className="bg-navy">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-          <h1 className="font-display text-3xl font-bold text-white">Alumni Directory</h1>
-          <p className="text-columbia-blue/80 mt-2">
-            {alumni.length} verified alumni{hasFilters ? " matching your filters" : " across top consulting firms"}
+          <h1 className="font-display text-3xl font-extrabold text-white tracking-tight">Alumni Directory</h1>
+          <p className="text-teal/80 mt-2">
+            {alumni.length} alumni{hasFilters ? " matching your filters" : " across top consulting firms"}
           </p>
         </div>
       </div>
@@ -88,13 +86,13 @@ export default async function AlumniPage({ searchParams }: Props) {
         {alumni.length === 0 ? (
           <div className="text-center py-20">
             <div className="h-16 w-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#9E9E9E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-navy">No alumni found</h3>
-            <p className="text-sm text-slate-500 mt-1">
-              {hasFilters ? "Try adjusting your filters." : "No verified alumni in the directory yet."}
+            <h3 className="text-lg font-display font-bold text-navy">No alumni found</h3>
+            <p className="text-sm text-[#595959] mt-1">
+              {hasFilters ? "Try adjusting your filters." : "No alumni in the directory yet."}
             </p>
           </div>
         ) : (
