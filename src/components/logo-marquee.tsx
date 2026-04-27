@@ -9,21 +9,20 @@ const LOGOS = [
   { src: "/logos/oliver-wyman.jpg", alt: "Oliver Wyman" },
 ];
 
-// Double the logos for seamless infinite scroll
-const SCROLL_LOGOS = [...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS];
+const SCROLL_LOGOS = [...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS, ...LOGOS];
 
 export function LogoMarquee() {
   return (
-    <div className="bg-slate-50 border-y border-slate-100 py-6 overflow-hidden">
-      <div className="flex animate-marquee items-center gap-16">
+    <div className="bg-white rounded-lg border border-li-border py-5 overflow-hidden">
+      <div className="flex animate-marquee items-center gap-20">
         {SCROLL_LOGOS.map((logo, i) => (
-          <div key={i} className="flex-shrink-0 opacity-30 hover:opacity-60 transition-opacity">
+          <div key={i} className="flex-shrink-0 opacity-20">
             <Image
               src={logo.src}
               alt={logo.alt}
-              width={120}
-              height={40}
-              className="h-8 w-auto object-contain grayscale"
+              width={100}
+              height={32}
+              className="h-7 w-auto object-contain grayscale"
             />
           </div>
         ))}

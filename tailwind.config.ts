@@ -15,60 +15,24 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        // GRC brand palette
-        navy: {
-          DEFAULT: "#0A1F5B",
-          light: "#1a3278",
-          dark: "#061340",
-        },
-        teal: {
-          DEFAULT: "#3DB2C1",
-          light: "#5ec5d1",
-        },
-        burgundy: {
-          DEFAULT: "#982649",
-          light: "#b33360",
-        },
-        coral: {
-          DEFAULT: "#E07A5F",
-          light: "#e89680",
-        },
-        columbia: {
-          blue: "#9BCBEB",
-          light: "#C5E1F5",
-          dark: "#1D4F91",
-        },
-        gray: {
-          DEFAULT: "#9E9E9E",
-          dark: "#595959",
+        primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
+        secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
+        destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
+        muted: { DEFAULT: "hsl(var(--muted))", foreground: "hsl(var(--muted-foreground))" },
+        accent: { DEFAULT: "hsl(var(--accent))", foreground: "hsl(var(--accent-foreground))" },
+        popover: { DEFAULT: "hsl(var(--popover))", foreground: "hsl(var(--popover-foreground))" },
+        card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
+        // LinkedIn palette
+        li: {
+          blue: "#0A66C2",
+          "blue-hover": "#004182",
+          bg: "#F4F2EE",
+          card: "#FFFFFF",
+          border: "#E0E0E0",
+          text: "#191919",
+          "text-secondary": "#666666",
+          "text-muted": "#999999",
+          green: "#057642",
         },
       },
       borderRadius: {
@@ -77,8 +41,7 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        display: ["Raleway", "sans-serif"],
-        sans: ["proxima-nova", "Proxima Nova", "system-ui", "sans-serif"],
+        sans: ["Inter", "-apple-system", "system-ui", "sans-serif"],
       },
     },
   },

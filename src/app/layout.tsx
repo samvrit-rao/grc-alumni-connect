@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "GRC Alumni Connect",
-  description: "Columbia Global Research & Consulting — Alumni Directory",
+  description: "Columbia Global Research & Consulting — Alumni Network",
 };
 
 export default function RootLayout({
@@ -15,8 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        <div className="min-h-screen bg-white">
+      <body>
+        <div className="min-h-screen bg-[#F4F2EE]">
           <Navbar />
           {children}
         </div>

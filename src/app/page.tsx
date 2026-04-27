@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { FIRMS } from "@/lib/firms";
-import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
 import { LogoMarquee } from "@/components/logo-marquee";
@@ -18,157 +17,123 @@ async function getDashboardData() {
     where: { publishedToDirectory: true },
     _count: true,
   });
-
   const recentAlumni = await prisma.alumni.findMany({
     where: { publishedToDirectory: true },
     orderBy: { createdAt: "desc" },
-    take: 8,
+    take: 5,
   });
-
-  return { firmCounts, recentAlumni };
+  const totalAlumni = await prisma.alumni.count({ where: { publishedToDirectory: true } });
+  return { firmCounts, recentAlumni, totalAlumni };
 }
 
-export default async function DashboardPage() {
-  const { firmCounts, recentAlumni } = await getDashboardData();
+export default async function HomePage() {
+  const { firmCounts, recentAlumni, totalAlumni } = await getDashboardData();
 
   return (
-    <div>
-      {/* ── Beta Banner ── */}
-      <div className="bg-teal/10 border-b border-teal/20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 text-center">
-          <p className="text-sm text-navy">
-            <span className="font-semibold">Beta Preview</span> — This directory is currently in beta with Columbia Alumni.
-            Once elected to the board, it will be populated with verified alumni from our full membership database.
+    <>
+      {/* Beta banner — full width */}
+      <div className="bg-[#FFF9C4] border-b border-[#F9A825]/30">
+        <div className="max-w-[600px] mx-auto px-4 py-2.5 text-center">
+          <p className="text-xs text-[#5D4037]">
+            <strong>Beta Preview</strong> — This directory is currently in beta with Columbia Alumni. It will be populated with verified alumni from our full membership database.
           </p>
         </div>
       </div>
 
-      {/* ── Hero Section ── */}
-      <div className="relative bg-navy overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-30"
-          style={{ backgroundImage: "url('/grc-team.jpg')" }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/70 to-navy" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 text-center">
-          <h1 className="font-display text-3xl sm:text-5xl font-extrabold text-white leading-tight tracking-tight">
-            Transforming Global Communities.
-            <br />
-            <span className="text-teal">Consulting for Social Good.</span>
-          </h1>
-          <p className="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-white/80 leading-relaxed">
-            Global Research and Consulting Group is a 501(c)3 nonprofit that operates
-            worldwide from leading universities with the mission of helping global
-            non-profits, social impact startups, and governmental organizations achieve
-            their goals while simultaneously empowering students to give back to the
-            global community.
-          </p>
-          <div className="mt-10">
-            <Link
-              href="/alumni"
-              className="inline-flex items-center px-6 py-3 rounded-lg bg-teal text-white font-semibold text-sm hover:bg-teal-light transition-colors"
-            >
-              Browse Alumni Directory
-            </Link>
+      <div className="max-w-[600px] mx-auto px-4 py-5 space-y-3">
+        {/* Profile card */}
+        <div className="bg-white rounded-lg border border-[#E0E0E0] overflow-hidden">
+          <div className="h-16 bg-gradient-to-r from-[#004182] to-[#0A66C2]" />
+          <div className="px-5 pb-4 -mt-8">
+            <div className="h-16 w-16 rounded-full border-[3px] border-white bg-[#0A66C2] flex items-center justify-center">
+              <span className="text-white font-bold text-sm">GRC</span>
+            </div>
+            <h2 className="text-lg font-semibold text-[#191919] mt-2">GRC Alumni Connect</h2>
+            <p className="text-xs text-[#666]">Columbia Global Research & Consulting Group</p>
+            <div className="flex gap-6 mt-3 pt-3 border-t border-[#E0E0E0]">
+              <div className="text-xs">
+                <span className="text-[#666]">Connections </span>
+                <span className="text-[#0A66C2] font-semibold">{totalAlumni}</span>
+              </div>
+              <div className="text-xs">
+                <span className="text-[#666]">Firms </span>
+                <span className="text-[#0A66C2] font-semibold">{firmCounts.length}</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ── Logo Marquee ── */}
-      <LogoMarquee />
-
-      {/* ── Content ── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 space-y-14">
-
-        {/* Featured Firm Tiles */}
-        <section>
-          <h2 className="font-display text-2xl font-bold text-navy mb-6 tracking-tight">
-            Our Alumni Work At
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Firm tiles */}
+        <div className="bg-white rounded-lg border border-[#E0E0E0] p-4">
+          <h3 className="text-base font-semibold text-[#191919] mb-3">Alumni by Firm</h3>
+          <div className="grid grid-cols-4 gap-2">
             {FEATURED_FIRMS.map((firm) => {
               const count = firmCounts.find((fc) => fc.currentFirm === firm.slug)?._count ?? 0;
               return (
                 <Link key={firm.slug} href={`/alumni?firm=${firm.slug}`}>
-                  <div className="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group text-center">
-                    <div className="h-12 flex items-center justify-center mb-4">
-                      <Image
-                        src={firm.logo}
-                        alt={firm.name}
-                        width={140}
-                        height={48}
-                        className="max-h-12 w-auto object-contain"
-                      />
+                  <div className="border border-[#E0E0E0] rounded-lg py-3 px-2 hover:shadow-md hover:border-[#0A66C2]/40 transition-all cursor-pointer text-center group">
+                    <div className="h-7 flex items-center justify-center mb-2">
+                      <Image src={firm.logo} alt={firm.name} width={70} height={24} className="max-h-6 w-auto object-contain opacity-75 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <div className="text-2xl font-display font-bold text-navy">{count}</div>
-                    <div className="text-xs text-[#9E9E9E] mt-0.5">alumni</div>
+                    <div className="text-lg font-bold text-[#191919]">{count}</div>
+                    <div className="text-[10px] text-[#666]">alumni</div>
                   </div>
                 </Link>
               );
             })}
           </div>
-        </section>
-
-        {/* Recently Added */}
-        <section>
-          <h2 className="font-display text-xl font-bold text-navy mb-4 tracking-tight">
-            Recently Added
-          </h2>
-          <Card className="border-slate-200">
-            <CardContent className="p-6">
-              <div className="divide-y divide-slate-100">
-                {recentAlumni.map((a) => {
-                  const firm = FIRMS.find((f) => f.slug === a.currentFirm);
-                  return (
-                    <Link
-                      key={a.id}
-                      href={`/alumni/${a.id}`}
-                      className="flex items-center justify-between py-4 first:pt-0 last:pb-0 hover:bg-slate-50 -mx-3 px-3 rounded transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-navy/10 flex items-center justify-center">
-                          <span className="text-sm font-semibold text-navy">
-                            {a.name.split(" ").map((n) => n[0]).join("")}
-                          </span>
-                        </div>
-                        <div>
-                          <div className="text-sm font-semibold text-navy">{a.name}</div>
-                          <div className="text-xs text-[#595959]">
-                            {a.currentTitle || firm?.shortName || a.currentFirm}
-                          </div>
-                        </div>
-                      </div>
-                      <span className="text-xs text-[#9E9E9E] font-medium">
-                        {firm?.shortName || a.currentFirm}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-      </div>
-
-      {/* ── Footer ── */}
-      <footer className="bg-navy border-t border-white/10 mt-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-full bg-teal flex items-center justify-center">
-                <span className="text-white font-bold text-[10px]">GRC</span>
-              </div>
-              <div>
-                <div className="text-sm font-semibold text-white">Global Research & Consulting</div>
-                <div className="text-[10px] text-white/50">Columbia University</div>
-              </div>
-            </div>
-            <div className="text-xs text-white/40">
-              Beta Preview — Alumni data sourced from public LinkedIn profiles
-            </div>
-          </div>
         </div>
-      </footer>
-    </div>
+
+        {/* Logo marquee */}
+        <LogoMarquee />
+
+        {/* Feed posts */}
+        {recentAlumni.map((a) => {
+          const firm = FIRMS.find((f) => f.slug === a.currentFirm);
+          return (
+            <div key={a.id} className="bg-white rounded-lg border border-[#E0E0E0]">
+              <div className="px-4 pt-3 pb-2">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="h-6 w-6 rounded-full bg-[#0A66C2]/10 flex items-center justify-center">
+                    <span className="text-[7px] font-bold text-[#0A66C2]">GRC</span>
+                  </div>
+                  <span className="text-xs text-[#666]">GRC Alumni Connect</span>
+                  <span className="text-xs text-[#999]">· Just now</span>
+                </div>
+                <p className="text-sm text-[#666]">
+                  <strong className="text-[#191919]">{a.name}</strong> is now in the alumni directory
+                </p>
+              </div>
+              <Link href={`/alumni/${a.id}`}>
+                <div className="border-t border-[#E0E0E0] px-4 py-3 flex items-center gap-3 hover:bg-[#F4F2EE] transition-colors cursor-pointer">
+                  <div className="h-11 w-11 rounded-full bg-[#E8E8E8] flex items-center justify-center shrink-0">
+                    <span className="text-xs font-semibold text-[#666]">
+                      {a.name.split(" ").map((n) => n[0]).join("")}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-[#191919]">{a.name}</div>
+                    <div className="text-xs text-[#666] truncate">
+                      {a.currentTitle || "Alumni"} at {firm?.shortName || a.currentFirm}
+                    </div>
+                    {a.office && <div className="text-xs text-[#999]">{a.office}</div>}
+                  </div>
+                  <span className="shrink-0 px-3 py-1 rounded-full border border-[#0A66C2] text-[#0A66C2] text-xs font-semibold hover:bg-[#0A66C2]/5">
+                    View
+                  </span>
+                </div>
+              </Link>
+            </div>
+          );
+        })}
+
+        {/* View all link */}
+        <div className="text-center py-2">
+          <Link href="/alumni" className="text-sm text-[#0A66C2] font-semibold hover:underline">
+            View all {totalAlumni} alumni →
+          </Link>
+        </div>
+      </div>
+    </>
   );
 }

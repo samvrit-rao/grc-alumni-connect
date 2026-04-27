@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { FIRMS, SCHOOLS } from "@/lib/firms";
 import { AlumniFilters } from "@/components/alumni-filters";
-import { AlumniCard } from "@/components/alumni-card";
+import Link from "next/link";
 
 interface Props {
   searchParams: {
@@ -39,42 +39,34 @@ export default async function AlumniPage({ searchParams }: Props) {
   }
 
   const [alumni, offices, practiceAreas] = await Promise.all([
+    prisma.alumni.findMany({ where, orderBy: [{ name: "asc" }] }),
     prisma.alumni.findMany({
-      where,
-      orderBy: [{ name: "asc" }],
-    }),
-    prisma.alumni
-      .findMany({
-        where: { publishedToDirectory: true, office: { not: null } },
-        select: { office: true },
-        distinct: ["office"],
-        orderBy: { office: "asc" },
-      })
-      .then((r) => r.map((o) => o.office).filter(Boolean) as string[]),
-    prisma.alumni
-      .findMany({
-        where: { publishedToDirectory: true, practiceArea: { not: null } },
-        select: { practiceArea: true },
-        distinct: ["practiceArea"],
-        orderBy: { practiceArea: "asc" },
-      })
-      .then((r) => r.map((o) => o.practiceArea).filter(Boolean) as string[]),
+      where: { publishedToDirectory: true, office: { not: null } },
+      select: { office: true }, distinct: ["office"], orderBy: { office: "asc" },
+    }).then((r) => r.map((o) => o.office).filter(Boolean) as string[]),
+    prisma.alumni.findMany({
+      where: { publishedToDirectory: true, practiceArea: { not: null } },
+      select: { practiceArea: true }, distinct: ["practiceArea"], orderBy: { practiceArea: "asc" },
+    }).then((r) => r.map((o) => o.practiceArea).filter(Boolean) as string[]),
   ]);
 
   const hasFilters = firm || school || yearFrom || yearTo || office || practiceArea || q;
+  const firmInfo = firm ? FIRMS.find((f) => f.slug === firm) : null;
 
   return (
-    <div>
-      <div className="bg-navy">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-          <h1 className="font-display text-3xl font-extrabold text-white tracking-tight">Alumni Directory</h1>
-          <p className="text-teal/80 mt-2">
-            {alumni.length} alumni{hasFilters ? " matching your filters" : " across top consulting firms"}
-          </p>
-        </div>
+    <div className="mx-auto max-w-[1128px] px-4 py-6">
+      {/* Header */}
+      <div className="bg-white rounded-lg border border-li-border p-4 mb-4">
+        <h1 className="text-lg font-semibold text-li-text">My Network</h1>
+        <p className="text-sm text-li-text-secondary mt-0.5">
+          {alumni.length} connection{alumni.length !== 1 ? "s" : ""}
+          {firmInfo ? ` at ${firmInfo.shortName}` : ""}
+          {hasFilters && !firmInfo ? " matching filters" : ""}
+        </p>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      {/* Filters */}
+      <div className="bg-white rounded-lg border border-li-border p-4 mb-4">
         <AlumniFilters
           firms={FIRMS}
           schools={[...SCHOOLS]}
@@ -82,27 +74,51 @@ export default async function AlumniPage({ searchParams }: Props) {
           practiceAreas={practiceAreas}
           currentFilters={searchParams}
         />
-
-        {alumni.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="h-16 w-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#9E9E9E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-display font-bold text-navy">No alumni found</h3>
-            <p className="text-sm text-[#595959] mt-1">
-              {hasFilters ? "Try adjusting your filters." : "No alumni in the directory yet."}
-            </p>
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {alumni.map((a) => (
-              <AlumniCard key={a.id} alumni={a} />
-            ))}
-          </div>
-        )}
       </div>
+
+      {/* Results */}
+      {alumni.length === 0 ? (
+        <div className="bg-white rounded-lg border border-li-border p-12 text-center">
+          <svg className="h-12 w-12 mx-auto text-li-text-muted mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <h3 className="text-base font-semibold text-li-text">No connections found</h3>
+          <p className="text-sm text-li-text-secondary mt-1">
+            {hasFilters ? "Try adjusting your filters." : "No alumni in the directory yet."}
+          </p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg border border-li-border divide-y divide-li-border">
+          {alumni.map((a) => {
+            const f = FIRMS.find((fi) => fi.slug === a.currentFirm);
+            return (
+              <Link key={a.id} href={`/alumni/${a.id}`}>
+                <div className="flex items-center gap-3 px-4 py-3 hover:bg-[#F4F2EE] transition-colors cursor-pointer">
+                  <div className="h-12 w-12 rounded-full bg-[#E8E8E8] flex items-center justify-center shrink-0">
+                    <span className="text-sm font-semibold text-li-text-secondary">
+                      {a.name.split(" ").map((n) => n[0]).join("")}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-li-text hover:text-li-blue hover:underline truncate">
+                      {a.name}
+                    </div>
+                    <div className="text-xs text-li-text-secondary truncate">
+                      {a.currentTitle || "Alumni"} at {f?.shortName || a.currentFirm}
+                    </div>
+                    {a.office && (
+                      <div className="text-xs text-li-text-muted">{a.office}</div>
+                    )}
+                  </div>
+                  <button className="shrink-0 px-4 py-1.5 rounded-full border border-li-blue text-li-blue text-sm font-semibold hover:bg-li-blue/5 hover:border-li-blue transition-colors">
+                    Connect
+                  </button>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

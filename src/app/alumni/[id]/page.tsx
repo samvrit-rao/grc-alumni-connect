@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { FIRMS } from "@/lib/firms";
 import { notFound } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { CoffeeChatSection } from "@/components/coffee-chat-section";
 import Link from "next/link";
 
@@ -19,117 +17,160 @@ export default async function AlumniDetailPage({
 
   const firm = FIRMS.find((f) => f.slug === alumni.currentFirm);
 
-  // Build AI summary from available data
-  const summaryParts: string[] = [];
-  summaryParts.push(`${alumni.name} is currently ${alumni.currentTitle ? `a ${alumni.currentTitle}` : "working"} at ${firm?.name || alumni.currentFirm}.`);
-  if (alumni.office) summaryParts.push(`Based in ${alumni.office}.`);
-  if (alumni.practiceArea) summaryParts.push(`Specializes in ${alumni.practiceArea}.`);
-  if (alumni.school && alumni.gradYear) summaryParts.push(`Columbia ${alumni.school} '${alumni.gradYear.toString().slice(-2)}.`);
-  if (alumni.grcInvolvement) summaryParts.push(`GRC involvement: ${alumni.grcInvolvement}.`);
-  const aiSummary = summaryParts.join(" ");
-
   return (
-    <div>
-      <div className="bg-navy">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <Link href="/alumni" className="text-sm text-teal/70 hover:text-teal transition-colors">
-            ← Back to directory
-          </Link>
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* Profile Card */}
-        <Card className="border-slate-200">
-          <CardContent className="p-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="h-14 w-14 rounded-full bg-navy/10 flex items-center justify-center shrink-0">
-                <span className="text-lg font-semibold text-navy">
+    <div className="mx-auto max-w-[1128px] px-4 py-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+        {/* Main content */}
+        <div className="space-y-4">
+          {/* Profile card */}
+          <div className="bg-white rounded-lg border border-li-border overflow-hidden">
+            {/* Banner */}
+            <div className="h-[120px] bg-gradient-to-r from-[#004182] to-[#0A66C2]" />
+            <div className="px-6 pb-5 -mt-10">
+              <div className="h-[120px] w-[120px] rounded-full border-4 border-white bg-[#E8E8E8] flex items-center justify-center">
+                <span className="text-3xl font-bold text-li-text-secondary">
                   {alumni.name.split(" ").map((n) => n[0]).join("")}
                 </span>
               </div>
-              <div>
-                <h1 className="text-xl font-display font-bold text-navy">{alumni.name}</h1>
-                <p className="text-[#595959] mt-0.5">
-                  {alumni.currentTitle} at {firm?.name || alumni.currentFirm}
-                </p>
+              <h1 className="text-2xl font-semibold text-li-text mt-3">{alumni.name}</h1>
+              <p className="text-base text-li-text-secondary">
+                {alumni.currentTitle || "Alumni"} at {firm?.name || alumni.currentFirm}
+              </p>
+              {alumni.office && (
+                <p className="text-sm text-li-text-muted mt-0.5">{alumni.office}</p>
+              )}
+
+              <div className="flex items-center gap-2 mt-4">
+                {alumni.linkedinUrl && (
+                  <a
+                    href={alumni.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-1.5 rounded-full bg-li-blue text-white text-sm font-semibold hover:bg-li-blue-hover transition-colors"
+                  >
+                    Connect
+                  </a>
+                )}
+                <Link
+                  href={`/messaging`}
+                  className="px-4 py-1.5 rounded-full border border-li-blue text-li-blue text-sm font-semibold hover:bg-li-blue/5 transition-colors"
+                >
+                  Message
+                </Link>
+                {alumni.linkedinUrl && (
+                  <a
+                    href={alumni.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-1.5 rounded-full border border-li-text-secondary text-li-text-secondary text-sm font-semibold hover:bg-black/5 transition-colors"
+                  >
+                    View LinkedIn
+                  </a>
+                )}
               </div>
             </div>
+          </div>
 
-            <Separator className="my-6" />
+          {/* About / AI Summary */}
+          <div className="bg-white rounded-lg border border-li-border p-6">
+            <div className="flex items-center gap-2 mb-3">
+              <svg className="h-4 w-4 text-li-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+              <h2 className="text-base font-semibold text-li-text">About</h2>
+              <span className="text-[10px] bg-li-blue/10 text-li-blue px-1.5 py-0.5 rounded font-semibold">AI Generated</span>
+            </div>
+            <p className="text-sm text-li-text-secondary leading-relaxed">
+              {alumni.name} is {alumni.currentTitle ? `a ${alumni.currentTitle}` : "working"} at {firm?.name || alumni.currentFirm}.
+              {alumni.office ? ` Based in ${alumni.office}.` : ""}
+              {alumni.practiceArea ? ` Specializes in ${alumni.practiceArea}.` : ""}
+              {alumni.school && alumni.gradYear ? ` Graduated from Columbia ${alumni.school} in ${alumni.gradYear}.` : ""}
+              {alumni.grcInvolvement ? ` GRC involvement: ${alumni.grcInvolvement}.` : ""}
+              {" "}Reach out via the message generator below to request a coffee chat.
+            </p>
+          </div>
 
-            <div className="grid grid-cols-2 gap-x-8 gap-y-5">
+          {/* Experience */}
+          <div className="bg-white rounded-lg border border-li-border p-6">
+            <h2 className="text-base font-semibold text-li-text mb-4">Experience</h2>
+            <div className="flex items-start gap-3">
+              <div className="h-12 w-12 rounded bg-[#F4F2EE] flex items-center justify-center shrink-0">
+                <span className="text-xs font-bold text-li-text-secondary">
+                  {(firm?.shortName || alumni.currentFirm).slice(0, 3).toUpperCase()}
+                </span>
+              </div>
               <div>
-                <div className="text-[10px] text-teal uppercase tracking-wider font-semibold">Firm</div>
-                <div className="text-sm text-navy mt-1 font-medium">{firm?.name || alumni.currentFirm}</div>
+                <div className="text-sm font-semibold text-li-text">{alumni.currentTitle || "Consultant"}</div>
+                <div className="text-sm text-li-text-secondary">{firm?.name || alumni.currentFirm}</div>
+                {alumni.office && <div className="text-xs text-li-text-muted mt-0.5">{alumni.office}</div>}
+              </div>
+            </div>
+          </div>
+
+          {/* Education */}
+          {alumni.gradYear && (
+            <div className="bg-white rounded-lg border border-li-border p-6">
+              <h2 className="text-base font-semibold text-li-text mb-4">Education</h2>
+              <div className="flex items-start gap-3">
+                <div className="h-12 w-12 rounded bg-[#F4F2EE] flex items-center justify-center shrink-0">
+                  <span className="text-xs font-bold text-li-blue">CU</span>
+                </div>
+                <div>
+                  <div className="text-sm font-semibold text-li-text">Columbia University</div>
+                  <div className="text-sm text-li-text-secondary">{alumni.school}</div>
+                  <div className="text-xs text-li-text-muted">Class of {alumni.gradYear}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Coffee Chat Generator */}
+          <div className="bg-white rounded-lg border border-li-border p-6">
+            <CoffeeChatSection
+              alumniName={alumni.name}
+              alumniTitle={alumni.currentTitle || ""}
+              firmName={firm?.name || alumni.currentFirm}
+              office={alumni.office || ""}
+            />
+          </div>
+        </div>
+
+        {/* Right sidebar */}
+        <div className="hidden lg:block space-y-4">
+          <div className="bg-white rounded-lg border border-li-border p-4">
+            <h3 className="text-sm font-semibold text-li-text mb-1">Profile details</h3>
+            <div className="space-y-2 mt-3">
+              <div>
+                <div className="text-xs text-li-text-muted">Firm</div>
+                <div className="text-sm text-li-text">{firm?.name || alumni.currentFirm}</div>
               </div>
               {alumni.office && (
                 <div>
-                  <div className="text-[10px] text-teal uppercase tracking-wider font-semibold">Location</div>
-                  <div className="text-sm text-navy mt-1">{alumni.office}</div>
+                  <div className="text-xs text-li-text-muted">Location</div>
+                  <div className="text-sm text-li-text">{alumni.office}</div>
                 </div>
               )}
               {alumni.practiceArea && (
                 <div>
-                  <div className="text-[10px] text-teal uppercase tracking-wider font-semibold">Practice Area</div>
-                  <div className="text-sm text-navy mt-1">{alumni.practiceArea}</div>
+                  <div className="text-xs text-li-text-muted">Practice Area</div>
+                  <div className="text-sm text-li-text">{alumni.practiceArea}</div>
                 </div>
               )}
-              {alumni.gradYear && (
+              {firm && (
                 <div>
-                  <div className="text-[10px] text-teal uppercase tracking-wider font-semibold">Education</div>
-                  <div className="text-sm text-navy mt-1">Columbia {alumni.school} &apos;{alumni.gradYear?.toString().slice(-2)}</div>
+                  <div className="text-xs text-li-text-muted">Firm Tier</div>
+                  <div className="text-sm text-li-text">{firm.tier}</div>
                 </div>
               )}
             </div>
+          </div>
 
-            {alumni.linkedinUrl && (
-              <>
-                <Separator className="my-6" />
-                <div className="flex items-center gap-4">
-                  <a
-                    href={alumni.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0A66C2] text-white text-sm font-medium hover:bg-[#004182] transition-colors"
-                  >
-                    <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                    Connect on LinkedIn
-                  </a>
-                  <a
-                    href={alumni.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-teal hover:underline font-medium"
-                  >
-                    View Profile →
-                  </a>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* AI Summary */}
-        <Card className="border-teal/30 bg-teal/5">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <svg className="h-4 w-4 text-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
-              <h3 className="text-sm font-display font-bold text-navy">AI Summary</h3>
-            </div>
-            <p className="text-sm text-[#595959] leading-relaxed">{aiSummary}</p>
-          </CardContent>
-        </Card>
-
-        {/* Coffee Chat Message Generator */}
-        <CoffeeChatSection
-          alumniName={alumni.name}
-          alumniTitle={alumni.currentTitle || ""}
-          firmName={firm?.name || alumni.currentFirm}
-          office={alumni.office || ""}
-        />
+          <div className="bg-white rounded-lg border border-li-border p-4">
+            <Link href="/alumni" className="text-sm text-li-blue font-semibold hover:underline">
+              ← Back to network
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

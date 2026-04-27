@@ -2,29 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 26% 14%;
+    --background: 0 0% 96%;
+    --foreground: 0 0% 0%;
     --card: 0 0% 100%;
-    --card-foreground: 220 26% 14%;
+    --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 26% 14%;
-    --primary: 227 80% 20%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 209 82% 40%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 96%;
-    --secondary-foreground: 227 80% 20%;
+    --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 35%;
-    --accent: 183 52% 49%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 340 58% 37%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 88%;
     --input: 0 0% 88%;
-    --ring: 227 80% 20%;
+    --ring: 209 82% 40%;
     --radius: 0.5rem;
   }
 
@@ -33,14 +33,9 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-family: 'proxima-nova', 'Proxima Nova', system-ui, -apple-system, sans-serif;
-  }
-}
-
-@layer utilities {
-  .font-display {
-    font-family: 'Raleway', sans-serif;
+    @apply bg-[#F4F2EE] text-foreground;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
