@@ -3,6 +3,7 @@ import { FIRMS } from "@/lib/firms";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
+import { LogoMarquee } from "@/components/logo-marquee";
 
 const FEATURED_FIRMS = [
   { slug: "mckinsey", logo: "/logos/mckinsey.png", name: "McKinsey & Company" },
@@ -30,20 +31,13 @@ async function getDashboardData() {
 export default async function DashboardPage() {
   const { firmCounts, recentAlumni } = await getDashboardData();
 
-  const totalPublished = firmCounts.reduce((sum, fc) => sum + fc._count, 0);
-
-  // Only show firms that have alumni
-  const activeFirms = FIRMS.filter((firm) =>
-    firmCounts.some((fc) => fc.currentFirm === firm.slug && fc._count > 0)
-  );
-
   return (
     <div>
       {/* ── Beta Banner ── */}
       <div className="bg-teal/10 border-b border-teal/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 text-center">
           <p className="text-sm text-navy">
-            <span className="font-semibold">Beta Preview</span> — This directory is currently in beta with Columbia GRC alumni.
+            <span className="font-semibold">Beta Preview</span> — This directory is currently in beta with Columbia Alumni.
             Once elected to the board, it will be populated with verified alumni from our full membership database.
           </p>
         </div>
@@ -80,26 +74,13 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Stats Bar ── */}
-      <div className="bg-[#061340] border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div>
-              <div className="text-2xl sm:text-3xl font-display font-bold text-teal">{totalPublished}</div>
-              <div className="text-xs sm:text-sm text-white/60 mt-1">Alumni in Directory</div>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-display font-bold text-teal">{activeFirms.length}</div>
-              <div className="text-xs sm:text-sm text-white/60 mt-1">Consulting Firms</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* ── Logo Marquee ── */}
+      <LogoMarquee />
 
       {/* ── Content ── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 space-y-14">
 
-        {/* Floating Firm Logo Tiles */}
+        {/* Featured Firm Tiles */}
         <section>
           <h2 className="font-display text-2xl font-bold text-navy mb-6 tracking-tight">
             Our Alumni Work At
@@ -110,47 +91,18 @@ export default async function DashboardPage() {
               return (
                 <Link key={firm.slug} href={`/alumni?firm=${firm.slug}`}>
                   <div className="bg-white rounded-xl border border-slate-200 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group text-center">
-                    <div className="h-10 flex items-center justify-center mb-4 opacity-70 group-hover:opacity-100 transition-opacity">
+                    <div className="h-12 flex items-center justify-center mb-4">
                       <Image
                         src={firm.logo}
                         alt={firm.name}
                         width={140}
-                        height={40}
-                        className="max-h-10 w-auto"
+                        height={48}
+                        className="max-h-12 w-auto object-contain"
                       />
                     </div>
                     <div className="text-2xl font-display font-bold text-navy">{count}</div>
-                    <div className="text-xs text-gray-dark mt-0.5">alumni</div>
+                    <div className="text-xs text-[#9E9E9E] mt-0.5">alumni</div>
                   </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Alumni by Firm — only firms with alumni */}
-        <section>
-          <h2 className="font-display text-2xl font-bold text-navy mb-6 tracking-tight">
-            Columbia Alumni by Firm
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {activeFirms.map((firm) => {
-              const count = firmCounts.find((fc) => fc.currentFirm === firm.slug)?._count ?? 0;
-              return (
-                <Link key={firm.slug} href={`/alumni?firm=${firm.slug}`}>
-                  <Card className="hover:shadow-lg transition-all cursor-pointer border-slate-200 hover:border-teal group">
-                    <CardContent className="p-5 text-center">
-                      <div className="text-3xl font-display font-bold text-navy group-hover:text-teal transition-colors">
-                        {count}
-                      </div>
-                      <div className="text-sm text-gray-dark mt-1 font-medium">
-                        {firm.shortName}
-                      </div>
-                      <div className="text-[10px] text-[#9E9E9E] uppercase tracking-wider mt-0.5">
-                        {firm.tier}
-                      </div>
-                    </CardContent>
-                  </Card>
                 </Link>
               );
             })}
